@@ -1,0 +1,8 @@
+before_script:
+  - python3 -m venv venv
+  - venv/bin/pip install tox flake8
+  - . venv/bin/activate
+
+pytest_gfix_unit_tests:
+  script:
+    - tox

@@ -1,64 +1,67 @@
-# -*- coding: utf-8 -*-
+pytest_plugins = 'pytester'
 
 
-def test_bar_fixture(testdir):
-    """Make sure that pytest accepts our fixture."""
-
-    # create a temporary pytest test module
-    testdir.makepyfile("""
-        def test_sth(bar):
-            assert bar == "europython2015"
-    """)
-
-    # run pytest with the following cmd args
-    result = testdir.runpytest(
-        '--foo=europython2015',
-        '-v'
-    )
-
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        '*::test_sth PASSED*',
-    ])
-
-    # make sure that that we get a '0' exit code for the testsuite
-    assert result.ret == 0
+def temporary_failure():
+    return "raise Exception('Failure')"
 
 
-def test_help_message(testdir):
-    result = testdir.runpytest(
-        '--help',
-    )
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        'gfix:',
-        '*--foo=DEST_FOO*Set the value for the fixture "bar".',
-    ])
-
-
-def test_hello_ini_setting(testdir):
-    testdir.makeini("""
-        [pytest]
-        HELLO = world
-    """)
-
-    testdir.makepyfile("""
+def test_fail_to_verify_if_setup_fails(testdir):
+    testdir.makepyfile(
+        f"""
         import pytest
 
-        @pytest.fixture
-        def hello(request):
-            return request.config.getini('HELLO')
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            {temporary_failure()}
 
-        def test_hello_world(hello):
-            assert hello == 'world'
-    """)
+        def test_example_1():
+            assert True
+        """
+    )
+    result = testdir.runpytest()
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert '1 failed to verify' in result.stdout.str()
 
-    result = testdir.runpytest('-v')
 
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        '*::test_hello_world PASSED*',
-    ])
+def test_passed_in_output_if_setup_and_test_successfull(testdir):
+    testdir.makepyfile(
+        f"""
+        import pytest
 
-    # make sure that that we get a '0' exit code for the testsuite
-    assert result.ret == 0
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            pass
+
+        def test_example_1():
+            assert True
+        """
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert '1 failed to verify' not in result.stdout.str()
+
+    assert 'PASSED' not in result.stdout.str()
+    assert '1 passed' in result.stdout.str()
+
+
+def test_failed_in_output_on_error_in_test_logic(testdir):
+    testdir.makepyfile(
+        f"""
+        import pytest
+
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            pass
+
+        def test_example_1():
+            assert False
+        """
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert '1 failed to verify' not in result.stdout.str()
+
+    assert 'FAILED' not in result.stdout.str()
+    assert '1 failed' in result.stdout.str()

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
 import codecs
+import os
+
 from setuptools import setup
 
 
@@ -20,7 +21,9 @@ setup(
     maintainer_email='qa@gastrofix.com',
     license='MIT',
     url='https://github.com/gastrofix/pytest-gfix',
-    description='A plugin to  enforce re-running the setup phase in order to get to the call phase, which mostly contains the actually important test logic.',
+    description='A plugin to  enforce re-running the setup phase in order to '
+                'get to the call phase, which mostly contains '
+                'the actually important test logic.',
     long_description=read('README.rst'),
     py_modules=['pytest_gfix'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
