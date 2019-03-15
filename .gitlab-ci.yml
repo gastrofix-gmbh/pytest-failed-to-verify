@@ -1,11 +1,16 @@
-before_script:
-  - python3 -m venv venv
-  - venv/bin/pip install tox flake8
-  - . venv/bin/activate
-  - pwd
+image: python:3.7
 
-pytest_gfix_unit_tests:
-  tags:
-    - qa-mac-mini
+cache:
+  paths:
+  - .tox
+
+before_script:
+  - pip install tox
+
+static_analysis:
   script:
-    - tox tests/test_gfix.py
+   - tox -e static_analysis
+
+tests:
+  script:
+   - tox -e tests
