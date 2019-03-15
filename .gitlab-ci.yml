@@ -5,6 +5,6 @@ before_script:
 
 pytest_gfix_unit_tests:
   tags:
-    - atf
+    - qa-mac-mini
   script:
     - tox
