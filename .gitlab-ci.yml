@@ -1,10 +1,10 @@
-image: python:3.7
-
 cache:
   paths:
   - .tox
 
 before_script:
+  - python3 -m venv venv
+  - . venv/bin/activate
   - pip install tox
 
 tests:
