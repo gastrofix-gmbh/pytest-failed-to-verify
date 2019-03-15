@@ -11,4 +11,4 @@ tests:
   tags:
     - qa-mac-mini
   script:
-   - tox -c tox.ini --workdir .
+    - tox -c tox.ini --workdir .
