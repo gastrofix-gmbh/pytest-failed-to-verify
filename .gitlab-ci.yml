@@ -7,10 +7,8 @@ cache:
 before_script:
   - pip install tox
 
-static_analysis:
-  script:
-   - tox -e static_analysis
-
 tests:
+  tags:
+    - qa-mac-mini
   script:
    - tox -e tests
