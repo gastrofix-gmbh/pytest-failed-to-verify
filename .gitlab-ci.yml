@@ -4,5 +4,7 @@ before_script:
   - . venv/bin/activate
 
 pytest_gfix_unit_tests:
+  tags:
+    - atf
   script:
     - tox
