@@ -11,7 +11,7 @@ pytest-gfix
     :alt: Python versions
 
 .. image:: https://travis-ci.org/gastrofix/pytest-gfix.svg?branch=master
-    :target: https://travis-ci.org/gastrofix/pytest-gfix
+    :target: https://travis-ci.org/amuehl/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
 
 .. image:: https://ci.appveyor.com/api/projects/status/github/gastrofix/pytest-gfix?branch=master
