@@ -7,16 +7,16 @@ def temporary_failure():
 
 def test_fail_to_verify_if_setup_fails(testdir):
     testdir.makepyfile(
-        f"""
+        """
         import pytest
 
         @pytest.fixture(scope='function', autouse=True)
         def function_setup_teardown():
-            {temporary_failure()}
+            {0}
 
         def test_example_1():
             assert True
-        """
+        """.format(temporary_failure())
     )
     result = testdir.runpytest()
     assert 'FAILED TO VERIFY' not in result.stdout.str()
@@ -25,7 +25,7 @@ def test_fail_to_verify_if_setup_fails(testdir):
 
 def test_passed_in_output_if_setup_and_test_successfull(testdir):
     testdir.makepyfile(
-        f"""
+        """
         import pytest
 
         @pytest.fixture(scope='function', autouse=True)
@@ -47,7 +47,7 @@ def test_passed_in_output_if_setup_and_test_successfull(testdir):
 
 def test_failed_in_output_on_error_in_test_logic(testdir):
     testdir.makepyfile(
-        f"""
+        """
         import pytest
 
         @pytest.fixture(scope='function', autouse=True)
