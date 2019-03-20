@@ -20,7 +20,7 @@ def test_fail_to_verify_if_setup_fails(testdir):
     )
     result = testdir.runpytest()
     assert 'FAILED TO VERIFY' not in result.stdout.str()
-    assert '1 failed to verify' in result.stdout.str()
+    assert '2 failed to verify' in result.stdout.str()
 
 
 def test_passed_in_output_if_setup_and_test_successfull(testdir):
