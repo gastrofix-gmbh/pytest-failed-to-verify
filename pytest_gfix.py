@@ -2,6 +2,8 @@ import pytest
 import os
 from _pytest.runner import runtestprotocol
 from _pytest.main import EXIT_TESTSFAILED
+
+
 reruns = os.getenv('RERUN_SETUP_COUNT', 1)
 
 
@@ -28,7 +30,7 @@ def pytest_report_teststatus(report):
                                          {'yellow': True})
 
 
-def pytest_terminal_summary(terminalreporter, exitstatus, config):
+def pytest_terminal_summary(terminalreporter):
     """Adapted from https://pytest.org/latest/_modules/_pytest/skipping.html
     """
     tr = terminalreporter
