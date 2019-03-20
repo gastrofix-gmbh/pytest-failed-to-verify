@@ -1,4 +1,8 @@
 import pytest
+import os
+from _pytest.runner import runtestprotocol
+
+reruns = os.getenv('RERUN_SETUP_COUNT', 1)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -18,6 +22,9 @@ def pytest_report_teststatus(report):
     if report.outcome == 'failed to verify':
         return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
                                            {'yellow': True})
+    if report.outcome == 'rerun':
+        return 'rerun', 'R', ('RERUN',
+                              {'yellow': True})
 
 
 def pytest_terminal_summary(terminalreporter):
@@ -43,3 +50,21 @@ def show_failed_to_verify(terminalreporter, lines):
         for rep in failed_to_verify:
             pos = rep.nodeid
             lines.append("FAILED TO VERIFY %s" % (pos,))
+
+
+def pytest_runtest_protocol(item, nextitem):
+    execution_count = 0
+    while True:
+        execution_count += 1
+        item.ihook.pytest_runtest_logstart(nodeid=item.nodeid, location=item.location)
+        reports = runtestprotocol(item, nextitem)
+        for report in reports:
+            if execution_count > reruns:
+                item.ihook.pytest_runtest_logreport(report=report)
+            else:
+                item.ihook.pytest_runtest_logreport(report=report)
+                if report.when == 'setup' and not report.passed:
+                    report.outcome = 'rerun'
+                    break
+        else:
+            return True
