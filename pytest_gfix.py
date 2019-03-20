@@ -22,9 +22,9 @@ def pytest_report_teststatus(report):
     if report.outcome == 'failed to verify':
         return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
                                            {'yellow': True})
-    if report.outcome == 'rerun':
-        return 'rerun', 'R', ('RERUN',
-                              {'yellow': True})
+    if report.outcome == 'setup rerun':
+        return 'setup rerun', 'SR', ('SETUP RERUN',
+                                     {'yellow': True})
 
 
 def pytest_terminal_summary(terminalreporter):
@@ -62,9 +62,11 @@ def pytest_runtest_protocol(item, nextitem):
             if execution_count > reruns:
                 item.ihook.pytest_runtest_logreport(report=report)
             else:
-                item.ihook.pytest_runtest_logreport(report=report)
                 if report.when == 'setup' and not report.passed:
-                    report.outcome = 'rerun'
+                    report.outcome = 'setup rerun'
+                    item.ihook.pytest_runtest_logreport(report=report)
                     break
+                else:
+                    item.ihook.pytest_runtest_logreport(report=report)
         else:
             return True
