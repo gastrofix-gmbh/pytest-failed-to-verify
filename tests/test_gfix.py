@@ -19,9 +19,10 @@ def test_fail_to_verify_if_setup_fails(testdir):
         """.format(temporary_failure())
     )
     result = testdir.runpytest()
-    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'FAILED TO VERIFY' in result.stdout.str()
     assert '1 failed to verify' in result.stdout.str()
     assert '1 setup rerun' in result.stdout.str()
+    assert result.ret == 1
 
 
 def test_passed_in_output_if_setup_and_test_successfull(testdir):
@@ -44,6 +45,7 @@ def test_passed_in_output_if_setup_and_test_successfull(testdir):
 
     assert 'PASSED' not in result.stdout.str()
     assert '1 passed' in result.stdout.str()
+    assert result.ret == 0
 
 
 def test_failed_in_output_on_error_in_test_logic(testdir):
@@ -66,3 +68,4 @@ def test_failed_in_output_on_error_in_test_logic(testdir):
 
     assert 'FAILED' not in result.stdout.str()
     assert '1 failed' in result.stdout.str()
+    assert result.ret == 1

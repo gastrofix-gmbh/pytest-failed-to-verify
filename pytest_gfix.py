@@ -1,7 +1,7 @@
 import pytest
 import os
 from _pytest.runner import runtestprotocol
-
+from _pytest.main import EXIT_TESTSFAILED
 reruns = os.getenv('RERUN_SETUP_COUNT', 1)
 
 
@@ -19,37 +19,32 @@ def pytest_runtest_makereport(item, call):
 def pytest_report_teststatus(report):
     """Adapted from https://pytest.org/latest/_modules/_pytest/skipping.html
     """
-    if report.outcome == 'failed to verify':
-        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
-                                           {'yellow': True})
-    if report.outcome == 'setup rerun':
-        return 'setup rerun', 'SR', ('SETUP RERUN',
-                                     {'yellow': True})
+    if report.when == 'setup':
+        if report.outcome == 'failed to verify':
+            return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
+                                               {'red': True})
+        if report.outcome == 'setup rerun':
+            return 'setup rerun', 'SR', ('SETUP RERUN',
+                                         {'yellow': True})
 
 
-def pytest_terminal_summary(terminalreporter):
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
     """Adapted from https://pytest.org/latest/_modules/_pytest/skipping.html
     """
     tr = terminalreporter
     if not tr.reportchars:
         return
-
+    failed_to_verify = tr.stats.get("failed to verify")
     lines = []
-    for char in tr.reportchars:
-        if char in 'fF':
-            show_failed_to_verify(terminalreporter, lines)
-    if lines:
-        tr._tw.sep("=", "rerun test summary info")
-        for line in lines:
-            tr._tw.line(line)
-
-
-def show_failed_to_verify(terminalreporter, lines):
-    failed_to_verify = terminalreporter.stats.get("failed to verify")
     if failed_to_verify:
+        tr._session.exitstatus = EXIT_TESTSFAILED
         for rep in failed_to_verify:
             pos = rep.nodeid
             lines.append("FAILED TO VERIFY %s" % (pos,))
+    if lines:
+        tr._tw.sep("=", "failed to verify summary info")
+        for line in lines:
+            tr._tw.line(line)
 
 
 def pytest_runtest_protocol(item, nextitem):
