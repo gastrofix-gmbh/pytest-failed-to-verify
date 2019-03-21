@@ -1,10 +1,12 @@
-import pytest
 import os
-from _pytest.runner import runtestprotocol
-from _pytest.main import EXIT_TESTSFAILED
 
+import pytest
+from _pytest.main import EXIT_TESTSFAILED
+from _pytest.reports import TestReport
+from _pytest.runner import runtestprotocol
 
 reruns = os.getenv('RERUN_SETUP_COUNT', 1)
+TestReport.failed_to_verify = property(lambda _: False)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -15,19 +17,20 @@ def pytest_runtest_makereport(item, call):
 
     # we only look at actual failing test setup
     if rep.when == "setup" and rep.failed:
-        rep.outcome = 'failed to verify'
+        TestReport.failed_to_verify = property(lambda _: True)
+        rep.outcome = 'failed'
 
 
 def pytest_report_teststatus(report):
     """Adapted from https://pytest.org/latest/_modules/_pytest/skipping.html
     """
-    if report.when == 'setup':
-        if report.outcome == 'failed to verify':
-            return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
-                                               {'red': True})
-        if report.outcome == 'setup rerun':
-            return 'setup rerun', 'SR', ('SETUP RERUN',
-                                         {'yellow': True})
+    if report.outcome == 'setup rerun':
+        return 'setup rerun', 'SR', ('SETUP RERUN',
+                                     {'yellow': True})
+    if report.failed_to_verify:
+        TestReport.failed_to_verify = property(lambda _: False)
+        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
+                                           {'red': True})
 
 
 def pytest_terminal_summary(terminalreporter):
