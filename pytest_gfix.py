@@ -62,7 +62,7 @@ def pytest_runtest_protocol(item, nextitem):
             if execution_count > reruns:
                 item.ihook.pytest_runtest_logreport(report=report)
             else:
-                if report.when == 'setup' and not report.passed:
+                if report.when == 'setup' and not report.passed and not report.skipped:
                     report.outcome = 'setup rerun'
                     item.ihook.pytest_runtest_logreport(report=report)
                     break
