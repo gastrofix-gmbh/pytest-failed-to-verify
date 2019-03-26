@@ -4,13 +4,11 @@ import warnings
 
 import pkg_resources
 import pytest
-from _pytest.reports import TestReport
 from _pytest.resultlog import ResultLog
 from _pytest.runner import runtestprotocol
 
 
 RERUN_SETUP = os.getenv('RERUN_SETUP_COUNT', 1)
-TestReport.failed_to_verify = property(lambda _: False)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -21,7 +19,6 @@ def pytest_runtest_makereport(item, call):
 
     # we only look at actual failing test setup
     if rep.when == "setup" and rep.failed:
-        TestReport.failed_to_verify = property(lambda _: True)
         rep.outcome = 'failed'
 
 
@@ -194,7 +191,11 @@ def pytest_runtest_protocol(item, nextitem):
             if report.when == 'setup':
                 report.rerun = item.execution_count - 1
                 xfail = hasattr(report, 'wasxfail')
-                if item.execution_count > RERUN_SETUP or not report.failed or xfail:
+                if item.execution_count > RERUN_SETUP and report.failed and not report.passed:
+                    # last run and failure detected on setup
+                    report.failed_to_verify = True
+                    item.ihook.pytest_runtest_logreport(report=report)
+                elif item.execution_count > RERUN_SETUP or not report.failed or xfail:
                     # last run or no failure detected, log normally
                     item.ihook.pytest_runtest_logreport(report=report)
                 else:
@@ -247,10 +248,13 @@ def pytest_report_teststatus(report):
     if report.outcome == 'setup rerun':
         return 'setup rerun', 'SR', ('SETUP RERUN',
                                      {'yellow': True})
-    if report.failed_to_verify:
-        TestReport.failed_to_verify = property(lambda _: False)
-        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
-                                           {'red': True})
+
+    try:
+        if report.failed_to_verify:
+            return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
+                                               {'red': True})
+    except AttributeError:
+        pass
 
 
 def pytest_terminal_summary(terminalreporter):
