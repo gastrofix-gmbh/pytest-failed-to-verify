@@ -161,6 +161,16 @@ def _remove_failed_setup_state_from_session(item):
     setup_state.stack = list()
 
 
+def _clear_cache(parallel, report, item):
+    if not parallel or works_with_current_xdist():
+        # will rerun test, log intermediate result
+        item.ihook.pytest_runtest_logreport(report=report)
+
+    # cleanin item's cashed results from any level of setups
+    _remove_cached_results_from_failed_fixtures(item)
+    _remove_failed_setup_state_from_session(item)
+
+
 def pytest_runtest_protocol(item, nextitem):
     """
     Note: when teardown fails, two reports are generated for the case, one for
@@ -201,17 +211,9 @@ def pytest_runtest_protocol(item, nextitem):
                     item.ihook.pytest_runtest_logreport(report=report)
                 else:
                     # failure detected and reruns not exhausted, since i < reruns
-                    report.outcome = 'setup rerun'
                     time.sleep(delay)
-
-                    if not parallel or works_with_current_xdist():
-                        # will rerun test, log intermediate result
-                        item.ihook.pytest_runtest_logreport(report=report)
-
-                    # cleanin item's cashed results from any level of setups
-                    _remove_cached_results_from_failed_fixtures(item)
-                    _remove_failed_setup_state_from_session(item)
-
+                    report.outcome = 'setup rerun'
+                    _clear_cache(parallel, report, item)
                     break  # trigger rerun
             else:
                 report.rerun = item.execution_count - 1
@@ -221,17 +223,9 @@ def pytest_runtest_protocol(item, nextitem):
                     item.ihook.pytest_runtest_logreport(report=report)
                 else:
                     # failure detected and reruns not exhausted, since i < reruns
-                    report.outcome = 'rerun'
                     time.sleep(delay)
-
-                    if not parallel or works_with_current_xdist():
-                        # will rerun test, log intermediate result
-                        item.ihook.pytest_runtest_logreport(report=report)
-
-                    # cleanin item's cashed results from any level of setups
-                    _remove_cached_results_from_failed_fixtures(item)
-                    _remove_failed_setup_state_from_session(item)
-
+                    report.outcome = 'rerun'
+                    _clear_cache(parallel, report, item)
                     break  # trigger rerun
         else:
             need_to_run = False
