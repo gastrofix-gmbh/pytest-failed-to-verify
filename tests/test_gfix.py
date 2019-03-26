@@ -29,9 +29,7 @@ def test_fail_setup_and_pass(testdir):
     testdir.makepyfile(
         """
         import pytest
-        
         COUNT = 0
-        
         @pytest.fixture(scope='function', autouse=True)
         def function_setup_teardown():
             global COUNT
