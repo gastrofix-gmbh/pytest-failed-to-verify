@@ -183,7 +183,6 @@ def test_rerun_by_decorator_flaky_test_and_flaky_setup(testdir):
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
-    assert 'setup rerun' not in result.stdout.str()
     assert 'FAILED' not in result.stdout.str()
 
     assert '1 passed' in result.stdout.str()
