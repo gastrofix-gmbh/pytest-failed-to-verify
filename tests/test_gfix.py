@@ -91,6 +91,102 @@ def test_failed_in_output_on_error_in_test_logic(testdir):
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert '1 failed to verify' not in result.stdout.str()
 
+    assert 'setup rerun' not in result.stdout.str()
+
     assert 'FAILED' not in result.stdout.str()
     assert '1 failed' in result.stdout.str()
     assert result.ret == 1
+
+
+def test_rerun_by_decorator(testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            pass
+
+        @pytest.mark.flaky(reruns=2)
+        def test_example_1():
+            assert False
+        """
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'failed to verify' not in result.stdout.str()
+    assert 'setup rerun' not in result.stdout.str()
+    assert 'FAILED' not in result.stdout.str()
+
+    assert '1 failed' in result.stdout.str()
+    assert '2 rerun' in result.stdout.str()
+    assert result.ret == 1
+
+
+def test_rerun_by_decorator_flaky_test(testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+        COUNT = 0
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            pass
+
+        @pytest.mark.flaky(reruns=2)
+        def test_example_1():
+            global COUNT
+            if COUNT < 2:
+                COUNT += 1
+                assert False
+            else:
+                assert True
+        """.format(temporary_failure())
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'failed to verify' not in result.stdout.str()
+    assert 'setup rerun' not in result.stdout.str()
+    assert 'FAILED' not in result.stdout.str()
+
+    assert '1 passed' in result.stdout.str()
+    assert '2 rerun' in result.stdout.str()
+    assert result.ret == 0
+
+
+def test_rerun_by_decorator_flaky_test_and_flaky_setup(testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+        COUNT = 0
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            global COUNT
+            if COUNT == 0:
+                COUNT += 1
+                assert False
+            else:
+                assert True
+
+        @pytest.mark.flaky(reruns=2)
+        def test_example_1():
+            global COUNT
+            if COUNT < 2:
+                COUNT += 1
+                assert False
+            else:
+                assert True
+        """.format(temporary_failure())
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'failed to verify' not in result.stdout.str()
+    assert 'setup rerun' not in result.stdout.str()
+    assert 'FAILED' not in result.stdout.str()
+
+    assert '1 passed' in result.stdout.str()
+    assert '1 setup rerun' in result.stdout.str()
+    assert '1 rerun' in result.stdout.str()
+    assert result.ret == 0
