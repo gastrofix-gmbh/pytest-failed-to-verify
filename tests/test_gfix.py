@@ -198,11 +198,11 @@ def test_skipped(testdir):
 
         @pytest.fixture(scope='function', autouse=True)
         def function_setup_teardown():
-                assert True
+            assert True
 
         @pytest.mark.skip(reason='Reason why skipped')
         def test_example_1():
-                assert True
+            assert True
         """.format(temporary_failure())
     )
     result = testdir.runpytest()
@@ -223,11 +223,11 @@ def test_xfail(testdir):
 
         @pytest.fixture(scope='function', autouse=True)
         def function_setup_teardown():
-                assert True
+            assert True
 
         @pytest.mark.xfail(reason='Reason why skipped')
         def test_example_1():
-                assert True
+            assert True
         """.format(temporary_failure())
     )
     result = testdir.runpytest()
