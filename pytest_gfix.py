@@ -188,6 +188,7 @@ def pytest_runtest_protocol(item, nextitem):
         reports = runtestprotocol(item, nextitem=nextitem, log=False)
 
         for report in reports:  # 3 reports: setup, call, teardown
+            report.failed_to_verify = False
             if report.when == 'setup':
                 report.rerun = item.execution_count - 1
                 xfail = hasattr(report, 'wasxfail')
@@ -248,13 +249,9 @@ def pytest_report_teststatus(report):
     if report.outcome == 'setup rerun':
         return 'setup rerun', 'SR', ('SETUP RERUN',
                                      {'yellow': True})
-
-    try:
-        if report.failed_to_verify:
-            return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
-                                               {'red': True})
-    except AttributeError:
-        pass
+    if report.failed_to_verify:
+        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
+                                           {'red': True})
 
 
 def pytest_terminal_summary(terminalreporter):
