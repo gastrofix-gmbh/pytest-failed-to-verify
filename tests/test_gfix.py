@@ -189,3 +189,28 @@ def test_rerun_by_decorator_flaky_test_and_flaky_setup(testdir):
     assert '1 setup rerun' in result.stdout.str()
     assert '1 rerun' in result.stdout.str()
     assert result.ret == 0
+
+
+def test_skipped(testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+                assert True
+
+        @pytest.mark.skip(reason='Reason why skipped')
+        def test_example_1():
+                assert True
+        """.format(temporary_failure())
+    )
+    result = testdir.runpytest()
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'failed to verify' not in result.stdout.str()
+    assert 'FAILED' not in result.stdout.str()
+    assert 'setup rerun' not in result.stdout.str()
+
+    assert '1 skipped' in result.stdout.str()
+    assert result.ret == 0
