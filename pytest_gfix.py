@@ -9,14 +9,7 @@ from _pytest.resultlog import ResultLog
 from _pytest.runner import runtestprotocol
 
 
-@pytest.fixture(autouse=True)
-def setup_restaurant():
-    assert False
-
-
 RERUN_SETUP = os.getenv('RERUN_SETUP_COUNT', 1)
-
-
 TestReport.failed_to_verify = property(lambda _: False)
 
 
@@ -268,10 +261,16 @@ def pytest_terminal_summary(terminalreporter):
     if not tr.reportchars:
         return
 
+    failed_to_verify = tr.stats.get("failed to verify")
     lines = []
     for char in tr.reportchars:
         if char in 'rR':
             show_rerun(terminalreporter, lines)
+
+    if failed_to_verify:
+        for rep in failed_to_verify:
+            pos = rep.nodeid
+            lines.append("FAILED TO VERIFY %s" % (pos,))
 
     if lines:
         tr._tw.sep("=", "rerun test summary info")
