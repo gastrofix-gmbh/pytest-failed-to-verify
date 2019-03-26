@@ -25,7 +25,6 @@ def pytest_runtest_makereport(item, call):
         rep.outcome = 'failed'
 
 
-
 def works_with_current_xdist():
     """Returns compatibility with installed pytest-xdist version.
     When running tests in parallel using pytest-xdist < 1.20.0, the first
