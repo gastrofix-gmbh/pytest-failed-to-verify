@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import codecs
 import os
-
+import codecs
 from setuptools import setup
 
 
@@ -21,13 +20,11 @@ setup(
     maintainer_email='qa@gastrofix.com',
     license='MIT',
     url='https://github.com/gastrofix/pytest-failed-to-verify',
-    description='A plugin that enforces to get to the call phase, '
-                'by enabling to only rerun the setup-phase on failure. '
-                'We use it to deal with flaky tests',
+    description='A plugin that enforces to get to the call phase, by enabling to only rerun the setup-phase on failure. We use it to deal with flaky tests.',
     long_description=read('README.rst'),
-    py_modules=['pytest-failed-to-verify'],
+    py_modules=['pytest_failed_to_verify'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
-    install_requires=['pytest>=4.3.1'],
+    install_requires=['pytest>=4.1.0'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Pytest',
@@ -48,7 +45,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'failed-to-verify = pytest-failed-to-verify',
+            'failed-to-verify = pytest_failed_to_verify',
         ],
     },
 )
