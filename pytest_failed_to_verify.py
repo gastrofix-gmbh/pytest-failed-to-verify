@@ -99,7 +99,7 @@ def _get_marker(item):
 
 
 def get_rerun_setup_count(item):
-    rerun_setup = None
+    rerun_setup = 0
     if item.session.config.option.rerun_setup:
         # default to the global setting
         rerun_setup = item.session.config.option.rerun_setup
