@@ -1,14 +1,10 @@
 import os
-import time
-import warnings
-
 import pkg_resources
 import pytest
+import time
+import warnings
 from _pytest.resultlog import ResultLog
 from _pytest.runner import runtestprotocol
-
-
-RERUN_SETUP = os.getenv('RERUN_SETUP_COUNT', 1)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -38,17 +34,28 @@ def works_with_current_xdist():
 
 # command line options
 def pytest_addoption(parser):
-    group = parser.getgroup(
+    rerun_setup_group = parser.getgroup(
+        "rerun-setup",
+        "re-run failing test setup phase")
+    rerun_setup_group._addoption(
+        '--rerun-setup',
+        action="store",
+        dest="rerun_setup",
+        type=int,
+        default=0,
+        help="number of times to re-run failed setup phase. defaults to 0.")
+
+    rerun_failures_group = parser.getgroup(
         "rerunfailures",
         "re-run failing tests to eliminate flaky failures")
-    group._addoption(
+    rerun_failures_group._addoption(
         '--reruns',
         action="store",
         dest="reruns",
         type=int,
         default=0,
         help="number of times to re-run failed tests. defaults to 0.")
-    group._addoption(
+    rerun_failures_group._addoption(
         '--reruns-delay',
         action='store',
         dest='reruns_delay',
@@ -72,7 +79,7 @@ def check_options(config):
     val = config.getvalue
     if not val("collectonly"):
         if config.option.reruns != 0:
-            if config.option.usepdb:   # a core option
+            if config.option.usepdb:  # a core option
                 raise pytest.UsageError("--reruns incompatible with --pdb")
 
     resultlog = getattr(config, '_resultlog', None)
@@ -89,6 +96,15 @@ def _get_marker(item):
     except AttributeError:
         # pytest < 3.6
         return item.get_marker("flaky")
+
+
+def get_rerun_setup_count(item):
+    rerun_setup = None
+    if item.session.config.option.rerun_setup:
+        # default to the global setting
+        rerun_setup = item.session.config.option.rerun_setup
+
+    return rerun_setup
 
 
 def get_reruns_count(item):
@@ -178,7 +194,10 @@ def pytest_runtest_protocol(item, nextitem):
     """
 
     reruns = get_reruns_count(item)
-    if reruns is None and RERUN_SETUP is None:
+
+    rerun_setup = get_rerun_setup_count(item)
+
+    if reruns is None and rerun_setup is None:
         # global setting is not specified, and this test is not marked with
         # flaky
         return
@@ -202,11 +221,11 @@ def pytest_runtest_protocol(item, nextitem):
             if report.when == 'setup':
                 report.rerun = item.execution_count - 1
                 xfail = hasattr(report, 'wasxfail')
-                if item.execution_count > RERUN_SETUP and report.failed and not report.passed:
+                if item.execution_count > rerun_setup and report.failed and not report.passed:
                     # last run and failure detected on setup
                     report.failed_to_verify = True
                     item.ihook.pytest_runtest_logreport(report=report)
-                elif item.execution_count > RERUN_SETUP or not report.failed or xfail:
+                elif item.execution_count > rerun_setup or not report.failed or xfail:
                     # last run or no failure detected, log normally
                     item.ihook.pytest_runtest_logreport(report=report)
                 else:
