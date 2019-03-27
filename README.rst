@@ -18,7 +18,7 @@ pytest-failed-to-verify
     :target: https://ci.appveyor.com/project/gastrofix/pytest-gfix/branch/master
     :alt: See Build Status on AppVeyor
 
-A plugin that enforces to get to the call phase, by enabling to only rerun the setup-phase on failure. We use it to deal with flaky tests (see [I want to know more about it](i-want-to-know-more-about-it)).
+A plugin that enforces to get to the call phase, by enabling to only rerun the setup-phase on failure. We use it to deal with flaky tests ().
 
 What's the idea behind it?
 --------------------------
@@ -48,26 +48,26 @@ Features
 --------
 
 * Re-running the setup-phase on failure
-* A new test-outcome: `FAILED TO VERIFY` if the test-logic was not executed
+* A new test-outcome: ``FAILED_TO_VERIFY`` if the test-logic was not executed
 
 Credits
 ------------
 
-Credits to https://github.com/pytest-dev as some of the code was taken and re-used from their plugin [pytest-rerunfailures](https://github.com/pytest-dev/pytest-rerunfailures), which we used as a starting point to implelement the additional functionality.
+Credits to https://github.com/pytest-dev as some of the code was taken and re-used from their plugin `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ which we used as a starting point to implelement the additionally needed functionality.
 
 Known issues
 ------------
 
-* due to the similarity it does not work well together with pytest-rerunfailures, the functionality of pytest-rerunfailures is also working with this plugin tho.
+due to the similarity it does not work well together with pytest-rerunfailures, the functionality of pytest-rerunfailures is also working with this plugin tho.
 
 
 Installation
 ------------
 
 For now it can be installed using the following command:
-```pip install -e git://github.com/amuehl/pytest-failed-to-verify.git#egg=pytest-gfix```
+``pip install -e git://github.com/amuehl/pytest-failed-to-verify.git#egg=pytest-failed-to-verify``
 
-Note: _The plugin is not yet available via PyPi/pip._
+*Note: The plugin is not yet available via PyPi/pip.*
 
 
 Usage
@@ -75,9 +75,7 @@ Usage
 
 Once installed the plugin re-runs the setup phase once in case of an error. It can be modified by the following envorinment variable:
 
-```
-RERUN_SETUP = os.getenv('RERUN_SETUP_COUNT', 1)
-```
+``RERUN_SETUP = os.getenv('RERUN_SETUP_COUNT', 1)``
 
 The additional pytest-rerunfailures functionality works like described [here]()
 
