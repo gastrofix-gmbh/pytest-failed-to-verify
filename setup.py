@@ -13,19 +13,19 @@ def read(fname):
 
 
 setup(
-    name='pytest-gfix',
+    name='pytest-failed-to-verify',
     version='0.1.0',
     author='Gastrofix GmbH',
     author_email='qa@gastrofix.com',
     maintainer='Gastrofix GmbH',
     maintainer_email='qa@gastrofix.com',
     license='MIT',
-    url='https://github.com/gastrofix/pytest-gfix',
-    description='A plugin to  enforce re-running the setup phase in order to '
-                'get to the call phase, which mostly contains '
-                'the actually important test logic.',
+    url='https://github.com/gastrofix/pytest-failed-to-verify',
+    description='A plugin that enforces to get to the call phase, '
+                'by enabling to only rerun the setup-phase on failure. '
+                'We use it to deal with flaky tests',
     long_description=read('README.rst'),
-    py_modules=['pytest_gfix'],
+    py_modules=['pytest-failed-to-verify'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     install_requires=['pytest>=4.3.1'],
     classifiers=[
@@ -48,7 +48,7 @@ setup(
     ],
     entry_points={
         'pytest11': [
-            'gfix = pytest_gfix',
+            'failed-to-verify = pytest-failed-to-verify',
         ],
     },
 )
