@@ -72,5 +72,5 @@ target/
 # pyenv
 .python-version
 
-.idea/vcs.xml
-.idea/workspace.xml
+# IDE
+.idea*

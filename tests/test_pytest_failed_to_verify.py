@@ -18,10 +18,30 @@ def test_fail_to_verify_if_setup_fails(testdir):
             assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
     assert 'FAILED TO VERIFY' in result.stdout.str()
     assert '1 failed to verify' in result.stdout.str()
     assert '1 setup rerun' in result.stdout.str()
+    assert result.ret == 1
+
+
+def test_fail_to_verify_if_setup_fails_multiple_times(testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            {0}
+
+        def test_example_1():
+            assert True
+        """.format(temporary_failure())
+    )
+    result = testdir.runpytest('--rerun-setup', '2')
+    assert 'FAILED TO VERIFY' in result.stdout.str()
+    assert '1 failed to verify' in result.stdout.str()
+    assert '2 setup rerun' in result.stdout.str()
     assert result.ret == 1
 
 
@@ -43,7 +63,7 @@ def test_fail_setup_and_pass(testdir):
             assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
     assert 'failed to verify' not in result.stdout.str()
     assert '1 setup rerun' in result.stdout.str()
     assert '1 passed' in result.stdout.str()
@@ -63,7 +83,7 @@ def test_passed_in_output_if_setup_and_test_successfull(testdir):
             assert True
         """
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert '1 failed to verify' not in result.stdout.str()
@@ -86,7 +106,7 @@ def test_failed_in_output_on_error_in_test_logic(testdir):
             assert False
         """
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert '1 failed to verify' not in result.stdout.str()
@@ -112,7 +132,7 @@ def test_rerun_by_decorator(testdir):
             assert False
         """
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
@@ -143,7 +163,7 @@ def test_rerun_by_decorator_flaky_test(testdir):
                 assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
@@ -179,7 +199,7 @@ def test_rerun_by_decorator_flaky_test_and_flaky_setup(testdir):
                 assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
@@ -205,7 +225,7 @@ def test_skipped(testdir):
             assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
@@ -230,7 +250,7 @@ def test_xfail(testdir):
             assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest()
+    result = testdir.runpytest('--rerun-setup', '1')
 
     assert 'FAILED TO VERIFY' not in result.stdout.str()
     assert 'failed to verify' not in result.stdout.str()
