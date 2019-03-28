@@ -34,36 +34,50 @@ For now it can be installed using the following command:
 
 Usage
 -----
+Based on the existing `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin we added the following functionality:
 
-Once installed the plugin re-runs the setup phase in case of an error, if you trigger pytest like this:
+Once installed the plugin provides an additional test outcome `failed-to-verify` in case a test fails in the setup-phase, additionaly you are able to control the amount of re-runs specifically for the setup phase:
 
-``pytest --rerun-setup 1``
+``$ pytest --rerun-setup 1``
+
+
+The core functionality of `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ can be used also with this plugin.
+
+If you are interested in re-running the whole test you can use the following options globally:
+
+``$ pytest --reruns 5 --reruns-delay 1``
+
+or mark a single test as flaky like this:
+
+.. code-block:: python
+
+    @pytest.mark.flaky(reruns=5, reruns_delay=2)
+    def test_example():
+        import random
+        assert random.choice([True, False])``
 
 
 What's the idea behind it?
 --------------------------
 
-A python test consists of three phases (setup, call, teardown). Usually the call phase contains the actual tested business logic, and the outcome of this phase gives the most important result.
-In order to get to the actual test-logic, the setup phase is used to provide the pre-conditions for the test and might be even larger than the test.
+A pytest test consists of three phases (setup, call, teardown). Usually only the call phase contains the actual tested business logic and the outcome of this phase gives the most valuable result.
 
-Assuming that the flakiness of a test is evenly distributed between the lines of code a test runs, having a large setup phase means an error due to flakiness is most likely to happen there. If that's the case a test fails but is leaving you with no relevant test-outcome: the actual test did not happen.
+The setup phase is used to provide the pre-conditions for the test and might be even larger than the test.
 
-So re-running the setup phase is a mechanism that assures the code that tests the actual business logic is executed and gives you a valuable information about your test.
+Assuming that the flakiness of a test is evenly distributed between the lines of code a test is executing, having a large setup phase means an error due to flakiness is most likely to happen there. If that's the case a test fails but is leaving you with no relevant test-outcome: the actual test did not happen. 
 
-If the setup fails the result of a test will be `failed-to-verify` rather than failed.
+So if the setup fails the result of a test will be `failed-to-verify` rather than failed.
+
+Additionally re-running only the setup phase is a mechanism that assures the code that is testing the actual business logic (call-phase) is actually executed and provides you a valid test outcome without suffering from a flaky setup phase. 
+
 
 I want to know more about it
 ----------------------------
 
-We at gastrofix are also fighting the battle against flaky tests. Doing research we came across this very usefull and detailed article on how Dropbox is dealing with flaky tests in their CI (`Dropbox: How we’re winning the battle against flaky tests <https://blogs.dropbox.com/tech/2018/05/how-were-winning-the-battle-against-flaky-tests/>`_
+If you found this repo we wanted to let you know that we at gastrofix are also fighting the battle against flaky tests. Doing research we came across this very usefull and detailed article on how Dropbox is dealing with flaky tests in their CI (`Dropbox: How we’re winning the battle against flaky tests <https://blogs.dropbox.com/tech/2018/05/how-were-winning-the-battle-against-flaky-tests/>`_
 ).
 
-This plugin is a part of our adaption of their mechanism to deal with flaky tests.
-
-----
-
-This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
-
+This plugin is part of our approach of adapting their mechanism to deal with flaky tests.
 
 
 Credits
@@ -75,7 +89,6 @@ Known issues
 ------------
 
 Because of the similarity it does not work well together with pytest-rerunfailures. If you still need to be able to rerun the complete test on case of an error you can do this as well using this plugin.
-
 
 Contributing
 ------------
@@ -93,6 +106,10 @@ Issues
 ------
 
 If you encounter any problems, please `file an issue`_ along with a detailed description.
+
+----
+
+This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
 
 .. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
 .. _`@hackebrot`: https://github.com/hackebrot
