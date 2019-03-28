@@ -2,17 +2,21 @@
 pytest-failed-to-verify
 =======================
 
-.. image:: https://img.shields.io/pypi/v/pytest-gfix.svg
-    :target: https://pypi.org/project/pytest-gfix
-    :alt: PyPI version
-
-.. image:: https://img.shields.io/pypi/pyversions/pytest-gfix.svg
-    :target: https://pypi.org/project/pytest-gfix
-    :alt: Python versions
+.. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
+   :target: https://github.com/pytest-dev/pytest-rerunfailures/blob/master/LICENSE
+   :alt: License
 
 .. image:: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify.svg?branch=master
     :target: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
+
+.. image:: https://img.shields.io/pypi/v/pytest-failed-to-verify.svg
+    :target: https://pypi.org/project/pytest-failed-to-verify
+    :alt: PyPI version
+
+.. image:: https://img.shields.io/pypi/pyversions/pytest-failed-to-verify.svg
+    :target: https://pypi.org/project/pytest-failed-to-verify
+    :alt: Python versions
 
 A pytest plugin that helps better distinguishing real test failures from setup flakiness.
 
@@ -94,12 +98,6 @@ Contributing
 ------------
 Contributions are very welcome. Tests can be run with `tox`_, please ensure
 the coverage at least stays the same before you submit a pull request.
-
-
-License
--------
-
-Distributed under the terms of the `MIT`_ license, "pytest-failed-to-verify" is free and open source software
 
 
 Issues
