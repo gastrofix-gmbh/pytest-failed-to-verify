@@ -10,13 +10,9 @@ pytest-failed-to-verify
     :target: https://pypi.org/project/pytest-gfix
     :alt: Python versions
 
-.. image:: https://travis-ci.org/gastrofix/pytest-gfix.svg?branch=master
+.. image:: https://travis-ci.org/amuehl/pytest-failed-to-verify.svg?branch=master
     :target: https://travis-ci.org/amuehl/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
-
-.. image:: https://ci.appveyor.com/api/projects/status/github/gastrofix/pytest-gfix?branch=master
-    :target: https://ci.appveyor.com/project/gastrofix/pytest-gfix/branch/master
-    :alt: See Build Status on AppVeyor
 
 A plugin that enforces to get to the call phase, by enabling to only rerun the setup-phase on failure. We use it to deal with flaky tests ().
 
