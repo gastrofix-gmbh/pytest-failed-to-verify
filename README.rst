@@ -10,7 +10,7 @@ pytest-failed-to-verify
     :target: https://pypi.org/project/pytest-gfix
     :alt: Python versions
 
-.. image:: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify?branch=master
+.. image:: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :target: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
 
