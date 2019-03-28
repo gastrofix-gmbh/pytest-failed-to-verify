@@ -10,7 +10,7 @@ pytest-failed-to-verify
     :target: https://pypi.org/project/pytest-gfix
     :alt: Python versions
 
-.. image:: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
+.. image:: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify.svg?branch=master
     :target: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
 
@@ -70,7 +70,7 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 Credits
 ------------
 
-Credits to https://github.com/pytest-dev as some of the code was taken and re-used from their plugin `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ which we used as a starting point to implelement the additionally needed functionality.
+Credits to https://github.com/pytest-dev as some of the code was taken and re-used from their plugin `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ . We used it as a starting point to implelement the additionally needed functionality.
 
 Known issues
 ------------
@@ -87,7 +87,7 @@ the coverage at least stays the same before you submit a pull request.
 License
 -------
 
-Distributed under the terms of the `MIT`_ license, "pytest-gfix" is free and open source software
+Distributed under the terms of the `MIT`_ license, "pytest-failed-to-verify" is free and open source software
 
 
 Issues
