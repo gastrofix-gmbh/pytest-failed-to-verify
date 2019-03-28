@@ -14,13 +14,14 @@ pytest-failed-to-verify
     :target: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
 
-A plugin that enforces to get to the call phase, by enabling to only rerun the setup-phase on failure. We use it to deal with flaky tests (read below).
+A pytest plugin that helps better distinguishing real test failures from setup flakiness.
+
 
 Features
 --------
 
-* Re-running the setup-phase on failure
-* A new test-outcome: ``FAILED_TO_VERIFY`` if the test-logic was not executed
+* Re-running only the setup-phase on failure
+* Additional test-outcome: ``FAILED_TO_VERIFY`` if the test-logic was never executed
 
 Installation
 ------------
@@ -37,8 +38,6 @@ Usage
 Once installed the plugin re-runs the setup phase in case of an error, if you trigger pytest like this:
 
 ``pytest --rerun-setup 1``
-
-The additional pytest-rerunfailures functionality works like described
 
 
 What's the idea behind it?
@@ -75,7 +74,7 @@ Credits to https://github.com/pytest-dev as some of the code was taken and re-us
 Known issues
 ------------
 
-due to the similarity it does not work well together with pytest-rerunfailures, the functionality of pytest-rerunfailures is also working with this plugin tho.
+Because of the similarity it does not work well together with pytest-rerunfailures. If you still need to be able to rerun the complete test on case of an error you can do this as well using this plugin.
 
 
 Contributing
