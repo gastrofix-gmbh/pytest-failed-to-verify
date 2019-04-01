@@ -19,7 +19,7 @@ def test_fail_to_verify_if_setup_fails(testdir):
             assert True
         """.format(temporary_failure())
     )
-    result = testdir.runpytest('--rerun-setup', '1', '--tb=long')
+    result = testdir.runpytest('--rerun-setup', '1')
     assert '1 setup rerun' in result.stdout.str()
     assert 'Failure' in result.stdout.str()
     assert result.ret == 1
