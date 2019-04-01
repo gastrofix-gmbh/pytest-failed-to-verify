@@ -1,8 +1,8 @@
-import os
-import pkg_resources
-import pytest
 import time
 import warnings
+
+import pkg_resources
+import pytest
 from _pytest.resultlog import ResultLog
 from _pytest.runner import runtestprotocol
 
@@ -262,9 +262,11 @@ def pytest_report_teststatus(report):
     if report.outcome == 'setup rerun':
         return 'setup rerun', 'SR', ('SETUP RERUN',
                                      {'yellow': True})
+
+    # TODO: find a way to return `failed to verify` result-category AND have error logs visible in the traceback
     if report.failed_to_verify:
-        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
-                                           {'red': True})
+        return 'failed', 'F2V', ('FAILED TO VERIFY',
+                                 {'red': True})
 
 
 def pytest_terminal_summary(terminalreporter):
