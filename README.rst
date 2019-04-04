@@ -34,7 +34,7 @@ For now it can be installed using the following command:
 ``pip install -e git://github.com/gastrofix-gmbh/pytest-failed-to-verify.git#egg=pytest-failed-to-verify``
 
 *Note: The plugin is now available via PyPi/pip also.*
-``pip install pytest-failed-to-verify`
+``pip install pytest-failed-to-verify``
 
 
 Usage

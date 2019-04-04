@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name='pytest-failed-to-verify',
-    version='0.1.2',
+    version='0.1.3',
     author='Gastrofix GmbH',
     author_email='tech@gastrofix.com',
     maintainer='Gastrofix GmbH',
