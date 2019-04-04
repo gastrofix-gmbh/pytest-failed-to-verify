@@ -10,11 +10,11 @@ pytest-failed-to-verify
     :target: https://travis-ci.org/gastrofix-gmbh/pytest-failed-to-verify
     :alt: See Build Status on Travis CI
 
-.. image:: https://img.shields.io/pypi/v/pytest-failed-to-verify.svg
+.. image:: https://img.shields.io/pypi/v/pytest-failed-to-verify.svg?color=blue   :alt: PyPI
     :target: https://pypi.org/project/pytest-failed-to-verify
     :alt: PyPI version
 
-.. image:: https://img.shields.io/pypi/pyversions/pytest-failed-to-verify.svg
+.. image:: https://img.shields.io/pypi/pyversions/pytest-failed-to-verify.svg   :alt: PyPI - Python Version
     :target: https://pypi.org/project/pytest-failed-to-verify
     :alt: Python versions
 
