@@ -263,9 +263,8 @@ def pytest_report_teststatus(report):
         return 'setup rerun', 'SR', ('SETUP RERUN',
                                      {'yellow': True})
 
-    # TODO: find a way to return `failed to verify` result-category AND have error logs visible in the traceback
     if report.failed_to_verify:
-        return 'failed', 'F2V', ('FAILED TO VERIFY',
+        return 'failed to verify', 'F2V', ('FAILED TO VERIFY',
                                  {'red': True})
 
 
@@ -289,6 +288,9 @@ def pytest_terminal_summary(terminalreporter):
 
     if lines:
         tr._tw.sep("=", "rerun test summary info")
+        if failed_to_verify:
+            for test in failed_to_verify:
+                lines.append(test.longreprtext)
         for line in lines:
             tr._tw.line(line)
 
