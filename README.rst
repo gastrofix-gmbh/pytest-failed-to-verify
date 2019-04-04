@@ -25,15 +25,16 @@ Features
 --------
 
 * Re-running only the setup-phase on failure
-* Additional test-outcome: ``FAILED_TO_VERIFY`` if the test-logic was never executed
+* Additional test-outcome: ``FAILED_TO_VERIFY`` if a failure happened in setup phase and prevented the actual test-logic from executing.
 
 Installation
 ------------
 
 For now it can be installed using the following command:
-``pip install -e git://github.com/amuehl/pytest-failed-to-verify.git#egg=pytest-failed-to-verify``
+``pip install -e git://github.com/gastrofix-gmbh/pytest-failed-to-verify.git#egg=pytest-failed-to-verify``
 
-*Note: The plugin is not yet available via PyPi/pip.*
+*Note: The plugin is now available via PyPi/pip also.*
+``pip install pytest-failed-to-verify`
 
 
 Usage
@@ -58,7 +59,7 @@ or mark a single test as flaky like this:
     @pytest.mark.flaky(reruns=5, reruns_delay=2)
     def test_example():
         import random
-        assert random.choice([True, False])``
+        assert random.choice([True, False])
 
 
 What's the idea behind it?
@@ -111,7 +112,6 @@ This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`
 
 .. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
 .. _`@hackebrot`: https://github.com/hackebrot
-.. _`MIT`: http://opensource.org/licenses/MIT
 .. _`BSD-3`: http://opensource.org/licenses/BSD-3-Clause
 .. _`GNU GPL v3.0`: http://www.gnu.org/licenses/gpl-3.0.txt
 .. _`Apache Software License 2.0`: http://www.apache.org/licenses/LICENSE-2.0
