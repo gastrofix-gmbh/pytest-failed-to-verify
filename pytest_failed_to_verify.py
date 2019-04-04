@@ -285,12 +285,10 @@ def pytest_terminal_summary(terminalreporter):
         for rep in failed_to_verify:
             pos = rep.nodeid
             lines.append("FAILED TO VERIFY %s" % (pos,))
+            lines.append(rep.longreprtext)
 
     if lines:
         tr._tw.sep("=", "rerun test summary info")
-        if failed_to_verify:
-            for test in failed_to_verify:
-                lines.append(test.longreprtext)
         for line in lines:
             tr._tw.line(line)
 
