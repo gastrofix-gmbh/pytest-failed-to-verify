@@ -13,13 +13,13 @@ def read(fname):
 
 setup(
     name='pytest-failed-to-verify',
-    version='0.1.3',
+    version='0.1.4',
     author='Gastrofix GmbH',
     author_email='tech@gastrofix.com',
     maintainer='Gastrofix GmbH',
     maintainer_email='tech@gastrofix.com',
     license='MPL',
-    url='https://github.com/gastrofix/pytest-failed-to-verify',
+    url='https://github.com/gastrofix-gmbh/pytest-failed-to-verify',
     description='A pytest plugin that helps better distinguishing real test failures from setup flakiness.',
     long_description=read('README.rst'),
     py_modules=['pytest_failed_to_verify'],
