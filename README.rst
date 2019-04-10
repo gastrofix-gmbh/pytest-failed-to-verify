@@ -31,7 +31,10 @@ Installation
 ------------
 
 You can install the plugin using the following command:
-``pip install pytest-failed-to-verify``
+
+.. code-block:: console
+
+   $ pip install pytest-failed-to-verify
 
 
 Usage
@@ -40,14 +43,17 @@ Based on the existing `pytest-rerunfailures <https://github.com/pytest-dev/pytes
 
 Once installed the plugin provides an additional test outcome `failed-to-verify` in case a test fails in the setup-phase, additionaly you are able to control the amount of re-runs specifically for the setup phase:
 
-``$ pytest --rerun-setup 1``
+.. code-block:: console
 
+   $ pytest --rerun-setup 1
 
 The core functionality of `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ can be used also with this plugin.
 
 If you are interested in re-running the whole test you can use the following options globally:
 
-``$ pytest --reruns 5 --reruns-delay 1``
+.. code-block:: console
+
+   $ pytest --reruns 5 --reruns-delay 1
 
 or mark a single test as flaky like this:
 
@@ -85,7 +91,7 @@ This plugin is part of our approach of adapting their mechanism to deal with fla
 Credits
 ------------
 
-Credits to https://github.com/pytest-dev as some of the code was taken and re-used from their plugin `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ . We used it as a starting point to implelement the additionally needed functionality.
+Credits to https://github.com/pytest-dev as some of the code was taken and re-used from the `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin. We used it as a starting point to implelement the additionally needed functionality.
 
 Known issues
 ------------
