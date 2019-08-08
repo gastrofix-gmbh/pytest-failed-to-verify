@@ -153,6 +153,32 @@ def test_skipped(pytest_command, testdir):
 
 
 @pytest.mark.parametrize("pytest_command", ['--rerun-setup 1', '--rerun-setup 1 -x'])
+def test_skipped_and_setup_fail(pytest_command, testdir):
+    testdir.makepyfile(
+        """
+        import pytest
+
+        @pytest.fixture(scope='function', autouse=True)
+        def function_setup_teardown():
+            assert False
+
+        @pytest.mark.skip(reason='Reason why skipped')
+        def test_example_1():
+            assert True
+        """
+    )
+    result = testdir.runpytest(*pytest_command.split())
+
+    assert 'FAILED TO VERIFY' not in result.stdout.str()
+    assert 'failed to verify' not in result.stdout.str()
+    assert 'FAILED' not in result.stdout.str()
+    assert 'setup rerun' not in result.stdout.str()
+
+    assert '1 skipped' in result.stdout.str()
+    assert result.ret == 0
+
+
+@pytest.mark.parametrize("pytest_command", ['--rerun-setup 1', '--rerun-setup 1 -x'])
 def test_xfail(pytest_command, testdir):
     testdir.makepyfile(
         """
