@@ -197,8 +197,8 @@ def test_xfail_and_setup_failure(pytest_command, testdir):
 
     assert 'FAILED TO VERIFY' in result.stdout.str()
     assert 'failed to verify' in result.stdout.str()
-    assert 'FAILED' not in result.stdout.str()
     assert 'setup rerun' in result.stdout.str()
     assert '1 failed to verify' in result.stdout.str()
+    assert 'Exception: Failure' in result.stdout.str()
 
     assert result.ret == 1

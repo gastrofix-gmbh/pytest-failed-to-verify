@@ -144,13 +144,29 @@ def pytest_runtest_protocol(item, nextitem):
             if report.when == 'setup':
                 report.rerun = item.execution_count - 1
                 xfail = hasattr(report, 'wasxfail')
-                if item.execution_count > rerun_setup and report.failed and not report.passed or xfail:
+
+                if item.execution_count > rerun_setup and _failed(report):
                     # last run and failure detected on setup
                     report.failed_to_verify = True
                     item.ihook.pytest_runtest_logreport(report=report)
-                elif item.execution_count > rerun_setup or not report.failed:
-                    # last run or no failure detected, log normally
+
+                elif item.execution_count > rerun_setup and _passed(report) or report.skipped and not xfail:
+                    # last run and no failure detected, log normally
                     item.ihook.pytest_runtest_logreport(report=report)
+
+                elif item.execution_count > rerun_setup and xfail and not report.passed:
+                    # last run and setup failed on xfail (remove any xfail traces, otherwise pytest exits with code 0)
+                    report.outcome = 'failed'
+                    report.failed_to_verify = True
+                    del report.wasxfail
+                    item.ihook.pytest_runtest_logreport(report=report)
+
+                elif item.execution_count > rerun_setup:
+                    item.ihook.pytest_runtest_logreport(report=report)
+
+                elif report.passed:
+                    item.ihook.pytest_runtest_logreport(report=report)
+
                 else:
                     report.outcome = 'setup rerun'
                     _clear_cache(parallel, report, item)
@@ -163,6 +179,14 @@ def pytest_runtest_protocol(item, nextitem):
         item.ihook.pytest_runtest_logfinish(nodeid=item.nodeid, location=item.location)
 
     return True
+
+
+def _passed(report):
+    return report.passed and not report.failed and not report.skipped
+
+
+def _failed(report):
+    return not report.passed and report.failed and not report.skipped
 
 
 def pytest_report_teststatus(report):
