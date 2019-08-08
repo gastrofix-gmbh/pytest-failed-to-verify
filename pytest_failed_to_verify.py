@@ -144,11 +144,11 @@ def pytest_runtest_protocol(item, nextitem):
             if report.when == 'setup':
                 report.rerun = item.execution_count - 1
                 xfail = hasattr(report, 'wasxfail')
-                if item.execution_count > rerun_setup and report.failed and not report.passed:
+                if item.execution_count > rerun_setup and report.failed and not report.passed or xfail:
                     # last run and failure detected on setup
                     report.failed_to_verify = True
                     item.ihook.pytest_runtest_logreport(report=report)
-                elif item.execution_count > rerun_setup or not report.failed or xfail:
+                elif item.execution_count > rerun_setup or not report.failed:
                     # last run or no failure detected, log normally
                     item.ihook.pytest_runtest_logreport(report=report)
                 else:
