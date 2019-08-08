@@ -39,31 +39,13 @@ You can install the plugin using the following command:
 
 Usage
 -----
-Based on the existing `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin we added the following functionality:
+Based on the existing `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin we changed functionality to the following:
 
 Once installed the plugin provides an additional test outcome `failed-to-verify` in case a test fails in the setup-phase, additionaly you are able to control the amount of re-runs specifically for the setup phase:
 
 .. code-block:: console
 
    $ pytest --rerun-setup 1
-
-The core functionality of `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ can be used also with this plugin.
-
-If you are interested in re-running the whole test you can use the following options globally:
-
-.. code-block:: console
-
-   $ pytest --reruns 5 --reruns-delay 1
-
-or mark a single test as flaky like this:
-
-.. code-block:: python
-
-    @pytest.mark.flaky(reruns=5, reruns_delay=2)
-    def test_example():
-        import random
-        assert random.choice([True, False])
-
 
 What's the idea behind it?
 --------------------------
@@ -76,22 +58,13 @@ Assuming that the flakiness of a test is evenly distributed between the lines of
 
 So if the setup fails the result of a test will be `failed-to-verify` rather than failed.
 
-Additionally re-running only the setup phase is a mechanism that assures the code that is testing the actual business logic (call-phase) is actually executed and provides you a valid test outcome without suffering from a flaky setup phase. 
-
-
-I want to know more about it
-----------------------------
-
-If you found this repo we wanted to let you know that we at gastrofix are also fighting the battle against flaky tests. Doing research we came across this very usefull and detailed article on how Dropbox is dealing with flaky tests in their CI (`Dropbox: How we’re winning the battle against flaky tests <https://blogs.dropbox.com/tech/2018/05/how-were-winning-the-battle-against-flaky-tests/>`_
-).
-
-This plugin is part of our approach of adapting their mechanism to deal with flaky tests.
+Additionally re-running only the setup phase is a mechanism that assures the code that is testing the actual business logic (call-phase) is actually executed and provides you a valid test outcome without suffering from a flaky setup phase.
 
 
 Credits
 ------------
 
-Credits to https://github.com/pytest-dev as some of the code was taken and re-used from the `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin. We used it as a starting point to implelement the additionally needed functionality.
+Credits to https://github.com/pytest-dev as some of the code was taken and re-used from the `pytest-rerunfailures <https://github.com/pytest-dev/pytest-rerunfailures>`_ plugin. We used it as a starting point to implement the needed functionality.
 
 Known issues
 ------------
